@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'questions_data.dart'; // Assure-toi que le chemin d'accès est correct
+import 'questions_data.dart';
 import 'QuizPage.dart';
+import 'AddQuestionPage.dart'; // Import the page for adding questions
 
 class HomePage extends StatelessWidget {
   @override
@@ -8,14 +9,21 @@ class HomePage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text('Quiz App'),
+        backgroundColor: Colors.blueAccent,
       ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
+            Icon(
+              Icons.school,
+              size: 80.0,
+              color: Colors.blueAccent,
+            ),
+            SizedBox(height: 20.0),
             Text(
               'Welcome to the Quiz!',
-              style: TextStyle(fontSize: 24.0),
+              style: TextStyle(fontSize: 24.0, fontWeight: FontWeight.bold),
             ),
             SizedBox(height: 20.0),
             ElevatedButton(
@@ -23,16 +31,55 @@ class HomePage extends StatelessWidget {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => QuizPage(
-                        allQuestions), // Utilisation de allQuestions ici
+                    builder: (context) => QuizPage(allQuestions),
                   ),
                 );
               },
-              child: Text('Start Quiz'),
+              child: Padding(
+                padding: const EdgeInsets.all(12.0),
+                child: Text(
+                  'Start Quiz',
+                  style: TextStyle(fontSize: 20.0),
+                ),
+              ),
+              style: ElevatedButton.styleFrom(
+                primary: Colors.blueAccent,
+                onPrimary: Colors.white,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8.0),
+                ),
+              ),
+            ),
+            SizedBox(height: 20.0),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) =>
+                        AddQuestionPage(), // Navigate to the AddQuestionPage
+                  ),
+                );
+              },
+              child: Padding(
+                padding: const EdgeInsets.all(12.0),
+                child: Text(
+                  'Add Question',
+                  style: TextStyle(fontSize: 20.0),
+                ),
+              ),
+              style: ElevatedButton.styleFrom(
+                primary: Colors.blueAccent,
+                onPrimary: Colors.white,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8.0),
+                ),
+              ),
             ),
           ],
         ),
       ),
+      backgroundColor: Colors.lightBlue[50],
     );
   }
 }

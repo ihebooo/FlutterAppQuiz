@@ -1,6 +1,6 @@
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
-import 'question_model.dart'; // Replace 'question_model.dart' with the correct path to the file defining the Question class
+import 'question_model.dart';
 
 class DatabaseHelper {
   static Database? _database;
@@ -43,5 +43,18 @@ class DatabaseHelper {
     return List.generate(maps.length, (i) {
       return Question.fromMap(maps[i]);
     });
+  }
+
+  // Méthode pour ajouter une nouvelle question à la base de données
+  Future<void> addNewQuestion(
+      String questionText, List<String> options, int correctAnswerIndex) async {
+    final newQuestion = Question(
+      id: null, // L'ID sera généré automatiquement par la base de données
+      questionText: questionText,
+      options: options,
+      correctAnswerIndex: correctAnswerIndex,
+    );
+
+    await insertQuestion(newQuestion);
   }
 }

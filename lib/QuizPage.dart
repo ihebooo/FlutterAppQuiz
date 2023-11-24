@@ -13,43 +13,31 @@ class QuizPage extends StatefulWidget {
 class _QuizPageState extends State<QuizPage> {
   int currentQuestionIndex = 0;
   int score = 0;
-  List<bool?> userAnswers = [];
-  bool canGoToNextQuestion = false;
 
   void checkAnswer(int selectedIndex) {
     int correctIndex =
         widget.questions[currentQuestionIndex].correctAnswerIndex;
     bool isCorrect = selectedIndex == correctIndex;
-    userAnswers.add(isCorrect);
-
-    if (isCorrect) {
-      setState(() {
-        score++;
-      });
-    }
 
     setState(() {
-      canGoToNextQuestion = true;
-    });
-  }
-
-  void goToNextQuestion() {
-    if (currentQuestionIndex < widget.questions.length - 1) {
-      setState(() {
+      if (isCorrect) {
+        score++;
+      }
+      if (currentQuestionIndex < widget.questions.length - 1) {
         currentQuestionIndex++;
-        canGoToNextQuestion =
-            false; // Réinitialise le bouton pour la prochaine question
-      });
-    } else {
-      // Navigation vers la page de résultats ou autre logique de fin de quiz
-      // Tu peux remplacer le code suivant par ce qui est nécessaire pour toi
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-          builder: (context) => ResultPage(score, widget.questions.length),
-        ),
-      );
-    }
+      } else {
+        // Affiche le score final après avoir répondu à toutes les questions
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => ResultPage(
+              score: score,
+              totalQuestions: widget.questions.length,
+            ),
+          ),
+        );
+      }
+    });
   }
 
   @override
@@ -57,42 +45,46 @@ class _QuizPageState extends State<QuizPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Quiz'),
+        backgroundColor: Colors.blueAccent, // Couleur de la barre de navigation
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Text(
               widget.questions[currentQuestionIndex].questionText,
-              style: TextStyle(fontSize: 20.0),
+              style: TextStyle(fontSize: 24.0),
+              textAlign: TextAlign.center,
             ),
-            SizedBox(height: 10.0),
-            // Affiche les options de réponse
-            ...widget.questions[currentQuestionIndex].options
-                .asMap()
-                .entries
-                .map((option) {
-              int index = option.key;
-              String optionText = option.value;
-              return ElevatedButton(
-                onPressed: () {
-                  checkAnswer(index);
-                },
-                child: Text(optionText),
-              );
-            }).toList(),
-            // Affiche le bouton pour passer à la question suivante s'il est activé
-            if (canGoToNextQuestion)
-              ElevatedButton(
-                onPressed: () {
-                  goToNextQuestion();
-                },
-                child: Text('Next Question'),
-              ),
+            SizedBox(height: 20.0),
+            Column(
+              children: widget.questions[currentQuestionIndex].options
+                  .asMap()
+                  .entries
+                  .map((option) {
+                int index = option.key;
+                String optionText = option.value;
+                return Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 8.0),
+                  child: ElevatedButton(
+                    onPressed: () {
+                      checkAnswer(index);
+                    },
+                    child: Text(optionText),
+                    style: ElevatedButton.styleFrom(
+                      primary: Colors.blueAccent, // Couleur du bouton
+                      onPrimary: Colors.white, // Couleur du texte du bouton
+                      minimumSize: Size(200, 40), // Taille du bouton
+                    ),
+                  ),
+                );
+              }).toList(),
+            ),
           ],
         ),
       ),
+      backgroundColor: Colors.lightBlue[50], // Couleur de fond de la page
     );
   }
 }
@@ -101,13 +93,14 @@ class ResultPage extends StatelessWidget {
   final int score;
   final int totalQuestions;
 
-  ResultPage(this.score, this.totalQuestions);
+  const ResultPage({required this.score, required this.totalQuestions});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text('Quiz Results'),
+        backgroundColor: Colors.blueAccent, // Couleur de la barre de navigation
       ),
       body: Center(
         child: Column(
@@ -115,16 +108,32 @@ class ResultPage extends StatelessWidget {
           children: <Widget>[
             Text(
               'Quiz Completed!',
-              style: TextStyle(fontSize: 24.0),
+              style: TextStyle(
+                fontSize: 24.0,
+                fontWeight: FontWeight.bold,
+              ),
             ),
             SizedBox(height: 20.0),
             Text(
               'Score: $score / $totalQuestions',
               style: TextStyle(fontSize: 20.0),
             ),
+            SizedBox(height: 20.0),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: Text('Restart Quiz'),
+              style: ElevatedButton.styleFrom(
+                primary: Colors.blueAccent, // Couleur du bouton
+                onPrimary: Colors.white, // Couleur du texte du bouton
+                minimumSize: Size(150, 40), // Taille du bouton
+              ),
+            ),
           ],
         ),
       ),
+      backgroundColor: Colors.lightBlue[50], // Couleur de fond de la page
     );
   }
 }
