@@ -4,7 +4,7 @@ import 'question_model.dart';
 class QuizPage extends StatefulWidget {
   final List<Question> questions;
 
-  QuizPage(this.questions);
+  QuizPage({required this.questions});
 
   @override
   _QuizPageState createState() => _QuizPageState();
@@ -26,7 +26,6 @@ class _QuizPageState extends State<QuizPage> {
       if (currentQuestionIndex < widget.questions.length - 1) {
         currentQuestionIndex++;
       } else {
-        // Affiche le score final après avoir répondu à toutes les questions
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
@@ -45,7 +44,7 @@ class _QuizPageState extends State<QuizPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Quiz'),
-        backgroundColor: Colors.blueAccent, // Couleur de la barre de navigation
+        backgroundColor: Colors.blueAccent,
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -73,9 +72,9 @@ class _QuizPageState extends State<QuizPage> {
                     },
                     child: Text(optionText),
                     style: ElevatedButton.styleFrom(
-                      primary: Colors.blueAccent, // Couleur du bouton
-                      onPrimary: Colors.white, // Couleur du texte du bouton
-                      minimumSize: Size(200, 40), // Taille du bouton
+                      primary: Colors.blueAccent,
+                      onPrimary: Colors.white,
+                      minimumSize: Size(200, 40),
                     ),
                   ),
                 );
@@ -84,7 +83,7 @@ class _QuizPageState extends State<QuizPage> {
           ],
         ),
       ),
-      backgroundColor: Colors.lightBlue[50], // Couleur de fond de la page
+      backgroundColor: Colors.lightBlue[50],
     );
   }
 }
@@ -100,7 +99,7 @@ class ResultPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text('Quiz Results'),
-        backgroundColor: Colors.blueAccent, // Couleur de la barre de navigation
+        backgroundColor: Colors.blueAccent,
       ),
       body: Center(
         child: Column(
@@ -125,15 +124,15 @@ class ResultPage extends StatelessWidget {
               },
               child: Text('Restart Quiz'),
               style: ElevatedButton.styleFrom(
-                primary: Colors.blueAccent, // Couleur du bouton
-                onPrimary: Colors.white, // Couleur du texte du bouton
-                minimumSize: Size(150, 40), // Taille du bouton
+                primary: Colors.blueAccent,
+                onPrimary: Colors.white,
+                minimumSize: Size(150, 40),
               ),
             ),
           ],
         ),
       ),
-      backgroundColor: Colors.lightBlue[50], // Couleur de fond de la page
+      backgroundColor: Colors.lightBlue[50],
     );
   }
 }

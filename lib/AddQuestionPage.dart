@@ -11,7 +11,7 @@ class _AddQuestionPageState extends State<AddQuestionPage> {
   final TextEditingController _questionController = TextEditingController();
   final List<TextEditingController> _optionControllers =
       List.generate(3, (_) => TextEditingController());
-  int? _correctOptionIndex;
+  int _correctOptionIndex = 0; // Set default correct option
 
   @override
   void dispose() {
@@ -41,6 +41,7 @@ class _AddQuestionPageState extends State<AddQuestionPage> {
             for (int i = 0; i < 3; i++)
               _buildOptionField(i + 1, _optionControllers[i]),
             SizedBox(height: 20.0),
+            Text('Select the correct option:'),
             _buildRadioOptions(),
             SizedBox(height: 20.0),
             ElevatedButton(
@@ -68,37 +69,17 @@ class _AddQuestionPageState extends State<AddQuestionPage> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Text('Select the correct option:'),
-        RadioListTile<int>(
-          title: Text('Option 1'),
-          value: 1,
-          groupValue: _correctOptionIndex,
-          onChanged: (value) {
-            setState(() {
-              _correctOptionIndex = value;
-            });
-          },
-        ),
-        RadioListTile<int>(
-          title: Text('Option 2'),
-          value: 2,
-          groupValue: _correctOptionIndex,
-          onChanged: (value) {
-            setState(() {
-              _correctOptionIndex = value;
-            });
-          },
-        ),
-        RadioListTile<int>(
-          title: Text('Option 3'),
-          value: 3,
-          groupValue: _correctOptionIndex,
-          onChanged: (value) {
-            setState(() {
-              _correctOptionIndex = value;
-            });
-          },
-        ),
+        for (int i = 0; i < 3; i++)
+          RadioListTile<int>(
+            title: Text('Option ${i + 1}'),
+            value: i,
+            groupValue: _correctOptionIndex,
+            onChanged: (value) {
+              setState(() {
+                _correctOptionIndex = value!;
+              });
+            },
+          ),
       ],
     );
   }
@@ -107,22 +88,24 @@ class _AddQuestionPageState extends State<AddQuestionPage> {
     String questionText = _questionController.text;
     List<String> options =
         _optionControllers.map((controller) => controller.text).toList();
-    int correctAnswerIndex =
-        _correctOptionIndex ?? 0; // Default to 0 if no option is selected
 
     Question newQuestion = Question(
       questionText: questionText,
       options: options,
-      correctAnswerIndex: correctAnswerIndex,
+      correctAnswerIndex: _correctOptionIndex,
     );
 
     await DatabaseHelper().insertQuestion(newQuestion);
-    // Show a snackbar or navigate to another screen to confirm the question is added
+
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text('Question added to database'),
+        content: Text('Question added to Firestore'),
         duration: Duration(seconds: 2),
       ),
     );
+    // Navigate back to the home page after inserting the question
+    Future.delayed(Duration(seconds: 0), () {
+      Navigator.pop(context);
+    });
   }
 }

@@ -1,60 +1,22 @@
-import 'package:path/path.dart';
-import 'package:sqflite/sqflite.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'question_model.dart';
 
 class DatabaseHelper {
-  static Database? _database;
-  static const String dbName = 'quiz.db';
-  static const String tableName = 'questions';
-
-  Future<Database> get database async {
-    if (_database != null) return _database!;
-
-    _database = await initDatabase();
-    return _database!;
-  }
-
-  Future<Database> initDatabase() async {
-    String path = join(await getDatabasesPath(), dbName);
-    return openDatabase(
-      path,
-      version: 1,
-      onCreate: (db, version) async {
-        await db.execute('''
-          CREATE TABLE $tableName(
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            questionText TEXT,
-            options TEXT,
-            correctAnswerIndex INTEGER
-          )
-        ''');
-      },
-    );
-  }
+  final CollectionReference _questionsCollection =
+      FirebaseFirestore.instance.collection('questions');
 
   Future<void> insertQuestion(Question question) async {
-    final Database db = await database;
-    await db.insert(tableName, question.toMap());
+    await _questionsCollection.add(question.toMap());
   }
 
-  Future<List<Question>> getQuestions() async {
-    final Database db = await database;
-    final List<Map<String, dynamic>> maps = await db.query(tableName);
-    return List.generate(maps.length, (i) {
-      return Question.fromMap(maps[i]);
+  Future<List<Question>> getAllQuestions() async {
+    QuerySnapshot questionSnapshot = await _questionsCollection.get();
+    List<Question> questions = [];
+
+    questionSnapshot.docs.forEach((doc) {
+      questions.add(Question.fromMap(doc.data() as Map<String, dynamic>));
     });
-  }
 
-  // Méthode pour ajouter une nouvelle question à la base de données
-  Future<void> addNewQuestion(
-      String questionText, List<String> options, int correctAnswerIndex) async {
-    final newQuestion = Question(
-      id: null, // L'ID sera généré automatiquement par la base de données
-      questionText: questionText,
-      options: options,
-      correctAnswerIndex: correctAnswerIndex,
-    );
-
-    await insertQuestion(newQuestion);
+    return questions;
   }
 }
