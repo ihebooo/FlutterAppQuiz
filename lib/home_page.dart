@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'AddQuestionPage.dart'; // Importez la page pour ajouter des questions
+import 'signin.dart'; // Importez la page pour ajouter des questions
 import 'QuizPage.dart';
 import 'database_helper.dart';
 import 'question_model.dart'; // Importez votre DatabaseHelper
@@ -76,14 +76,14 @@ class HomePage extends StatelessWidget {
                   context,
                   MaterialPageRoute(
                     builder: (context) =>
-                        AddQuestionPage(), // Naviguer vers la page d'ajout de question
+                        SignInPage(), // Naviguer vers la page d'ajout de question
                   ),
                 );
               },
               child: Padding(
                 padding: const EdgeInsets.all(12.0),
                 child: Text(
-                  'Add Question',
+                  'Login ',
                   style: TextStyle(fontSize: 20.0),
                 ),
               ),
