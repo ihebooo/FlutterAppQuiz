@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'database_helper.dart';
 import 'question_model.dart';
+import 'QuestionsManagementPage.dart';
 
 class AddQuestionPage extends StatefulWidget {
   @override
@@ -105,7 +106,14 @@ class _AddQuestionPageState extends State<AddQuestionPage> {
     );
     // Navigate back to the home page after inserting the question
     Future.delayed(Duration(seconds: 0), () {
-      Navigator.pop(context);
+
+ Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+            builder: (context) =>
+                QuestionsManagementPage()), // Replace [] with your product list
+      );
+
     });
   }
 }

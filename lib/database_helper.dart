@@ -12,6 +12,7 @@ class DatabaseHelper {
   Future<List<Question>> getAllQuestions() async {
     QuerySnapshot questionSnapshot = await _questionsCollection.get();
     List<Question> questions = [];
+    print(questionSnapshot);
 
     questionSnapshot.docs.forEach((doc) {
       questions.add(Question.fromMap(doc.data() as Map<String, dynamic>));

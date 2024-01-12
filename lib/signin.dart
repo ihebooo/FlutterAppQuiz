@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'AddQuestionPage.dart';
+import 'QuestionsManagementPage.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 class SignInPage extends StatefulWidget {
@@ -61,7 +61,7 @@ class _SignInPageState extends State<SignInPage> {
         context,
         MaterialPageRoute(
             builder: (context) =>
-                AddQuestionPage()), // Replace [] with your product list
+                QuestionsManagementPage()), // Replace [] with your product list
       );
     } catch (e) {
       // Show error message if sign-in fails
